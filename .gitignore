@@ -7,6 +7,7 @@
 /frontend/bazel-out
 
 # Node
+/backend/node_modules
 /frontend/node_modules
 npm-debug.log
 yarn-error.log
@@ -36,6 +37,9 @@ yarn-error.log
 /frontend/libpeerconnection.log
 testem.log
 /frontend/typings
+
+# Environment / Configuration
+/backend/.env
 
 # System files
 .DS_Store
