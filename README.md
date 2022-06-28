@@ -6,6 +6,14 @@ This project is split in 2 sub-projects : the back-end, and the front end
 
 This is the part of code done for the 6th project of the Openclassrooms Web Developper Course : Hot takes API for the Piiquante enterprise
 
+### Install
+Run `npm install`
+
+### Run server
+Run `node server`
+If you want a server that automatically reload if you change any of the source files,
+you can instead run `nodemon server` (after having installing nodemon : `npm install nodemon`)
+
 ## Front-end
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.2.4.
