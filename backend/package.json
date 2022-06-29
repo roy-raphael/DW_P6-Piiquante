@@ -5,7 +5,8 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "doc": "npx oas generate hot-takes-openapi-base.json -v > hot-takes-openapi-doc.json"
   },
   "author": "",
   "license": "ISC",
@@ -16,6 +17,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.3.6",
     "mongoose-unique-validator": "^3.1.0",
-    "multer": "^1.4.5-lts.1"
+    "multer": "^1.4.5-lts.1",
+    "oas": "^18.3.3"
   }
 }
