@@ -1,0 +1,45 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "hot-takes-api",
+    "description": "",
+    "license": {
+      "name": "ISC"
+    }
+  },
+  "tags": [
+    {
+      "name": "auth",
+      "description": "Everything about the authenthication"
+    }
+  ],
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "paths": {},
+  "components": {
+    "schemas": {
+      "errorMessage": {
+        "type": "string",
+        "maxLength": 256,
+        "description": "A text message describing an error"
+      },
+      "user": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "adresse e-mail de l'utilisateur [unique]"
+          },
+          "password": {
+            "type": "string",
+            "description": "mot de passe de l'utilisateur haché"
+          }
+        }
+      }
+    }
+  }
+}
