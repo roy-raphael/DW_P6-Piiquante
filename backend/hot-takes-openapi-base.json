@@ -12,6 +12,10 @@
     {
       "name": "auth",
       "description": "Everything about the authenthication"
+    },
+    {
+      "name": "sauces",
+      "description": "Everything about the sauces"
     }
   ],
   "servers": [
@@ -19,8 +23,32 @@
       "url": "http://localhost:3000"
     }
   ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
   "paths": {},
   "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "parameters": {
+      "sauceIdParam": {
+        "description": "Sauce ID",
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "description": "ID de la sauce"
+        }
+      }
+    },
     "schemas": {
       "errorMessage": {
         "type": "string",
@@ -37,6 +65,98 @@
           "password": {
             "type": "string",
             "description": "mot de passe de l'utilisateur haché"
+          }
+        }
+      },
+      "sauce": {
+        "type": "object",
+        "description": "TODO",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "TODO"
+          },
+          "userId": {
+            "type": "string",
+            "description": "TODO"
+          },
+          "name": {
+            "type": "string",
+            "description": "TODO"
+          },
+          "manufacturer": {
+            "type": "string",
+            "description": "TODO"
+          },
+          "description": {
+            "type": "string",
+            "description": "TODO"
+          },
+          "mainPepper": {
+            "type": "string",
+            "description": "TODO"
+          },
+          "imageUrl": {
+            "type": "string",
+            "description": "TODO"
+          },
+          "heat": {
+            "type": "number",
+            "description": "TODO"
+          },
+          "likes": {
+            "type": "number",
+            "description": "TODO"
+          },
+          "dislikes": {
+            "type": "number",
+            "description": "TODO"
+          },
+          "usersLiked": {
+            "type": "array",
+            "description": "TODO",
+            "items": {
+              "type": "string",
+              "description": "TODO"
+            }
+          },
+          "usersDisliked": {
+            "type": "array",
+            "description": "TODO",
+            "items": {
+              "type": "string",
+              "description": "TODO"
+            }
+          }
+        }
+      },
+      "sauce-form": {
+        "type": "object",
+        "description": "data tu use to create the sauce (object structure -> sauce-form schema)",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "TODO"
+          },
+          "manufacturer": {
+            "type": "string",
+            "description": "TODO"
+          },
+          "description": {
+            "type": "string",
+            "description": "TODO"
+          },
+          "mainPepper": {
+            "type": "string",
+            "description": "TODO"
+          },
+          "heat": {
+            "type": "number",
+            "description": "TODO"
+          },
+          "userId": {
+            "type": "string",
+            "description": "TODO"
           }
         }
       }
