@@ -3,18 +3,26 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Backend node server",
+      "program": "${workspaceFolder}/backend/server.js",
+      "request": "launch",
+      "type": "node"
+    },
+    {
       "name": "ng serve",
       "type": "pwa-chrome",
       "request": "launch",
       "preLaunchTask": "npm: start",
-      "url": "http://localhost:4200/"
+      "url": "http://localhost:4200/",
+      "cwd": "${workspaceRoot}/frontend"
     },
     {
       "name": "ng test",
       "type": "chrome",
       "request": "launch",
       "preLaunchTask": "npm: test",
-      "url": "http://localhost:9876/debug.html"
+      "url": "http://localhost:9876/debug.html",
+      "cwd": "${workspaceRoot}/frontend"
     }
   ]
 }
