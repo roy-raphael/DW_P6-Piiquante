@@ -7,16 +7,28 @@ This project is split in 2 sub-projects : the back-end, and the front end
 This is the part of code done for the 6th project of the Openclassrooms Web Developper Course : Hot takes API for the Piiquante enterprise
 
 ### Install
-Run `npm install`
+Run `npm install` (in the backend folder)
 
 ### Run server
-Run `node server`
+Run `node server` (in the backend folder)
 If you want a server that automatically reload if you change any of the source files,
 you can instead run `nodemon server` (after having installing nodemon : `npm install nodemon`)
+
+### Generate OpenAPI documentation
+Run `npm run doc` (in the backend folder)
+To visualize the OpenAPI documentation, you can use a VSCode pluggin (Swagger Viewer for example),
+or paste the content of hot-takes-openapi-doc.json in the editor on the following website : https://editor.swagger.io/
 
 ## Front-end
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.2.4.
+The following commands should be executed in the frontend folder.
+
+### Install
+Run `npm install` (in the frontend folder)
+
+### Quick start
+Run `npm start` (in the frontend folder)
 
 ### Development server
 
