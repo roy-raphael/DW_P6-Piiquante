@@ -1,7 +1,10 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import userRoutes from './routes/user.js';
 import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import userRoutes from './routes/user.js';
+import saucesRoutes from './routes/sauce.js';
 
 dotenv.config();
 
@@ -21,6 +24,11 @@ app.use((req, res, next) => {
     next();
 });
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+app.use('/images', express.static(path.join(__dirname, 'images')));
+
 app.use('/api/auth', userRoutes);
+app.use('/api/sauces', saucesRoutes);
 
 export default app;
