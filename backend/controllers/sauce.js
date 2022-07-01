@@ -1,5 +1,6 @@
-import Sauce from '../models/sauce.js';
 import fs from 'fs';
+import {formatErrorForResponse} from '../utils/error-utils.js'
+import Sauce from '../models/sauce.js';
 
 const SAUCES_IMAGES_SAVE_PATH = 'images';
 
@@ -59,7 +60,7 @@ export function createSauce(req, res, next) {
     });
     sauce.save()
     .then(() => res.status(201).json({ message: 'Objet enregistré !'}))
-    .catch(error => res.status(400).json({ error }));
+    .catch(error => res.status(400).end(formatErrorForResponse(error)));
 }
 
 /*
@@ -146,7 +147,7 @@ export function modifySauce(req, res, next) {
             });
         }
     })
-    .catch(error => res.status(400).json({ error }));
+    .catch(error => res.status(400).end(formatErrorForResponse(error)));
 }
 
 /*
@@ -166,6 +167,13 @@ export function modifySauce(req, res, next) {
  *          description: Message de suppression d'une sauce
  *        example: Objet supprimé
  *  "401":
+ *    description: TODO
+ *    content:
+ *      application/json:
+ *        schema:
+ *          $ref: "#/components/schemas/errorMessage"
+ *        example: TODO
+ *  "403":
  *    description: TODO
  *    content:
  *      application/json:
@@ -192,22 +200,21 @@ export function deleteSauce(req, res, next) {
     Sauce.findOne({ _id: req.params.id })
     .then((sauce) => {
         if (!sauce) {
-            console.log('No such Sauce!');
-            res.status(404).json({ error: 'No such Sauce!' });
+            res.status(404).end(formatErrorForResponse(new Error('No sauce found with this ID')));
         }
         else if (sauce.userId !== req.auth.userId) {
-            res.status(401).json({ error: 'Unauthorized request!' });
+            res.status(403).end(formatErrorForResponse(new Error('Unauthorized request')));
         }
         else {
             const filename = sauce.imageUrl.split(`/${SAUCES_IMAGES_SAVE_PATH}/`)[1];
             fs.unlink(`${SAUCES_IMAGES_SAVE_PATH}/${filename}`, () => {
                 Sauce.deleteOne({ _id: req.params.id })
                 .then(() => res.status(200).json({ message: 'Deleted!'}))
-                .catch(error => res.status(401).json({ error }));
+                .catch(error => res.status(401).end(formatErrorForResponse(error)));
             });
         }
     })
-    .catch(error => res.status(500).json({ error }));
+    .catch(error => res.status(500).end(formatErrorForResponse(error)));
 }
 
 /*
@@ -237,7 +244,7 @@ export function deleteSauce(req, res, next) {
 export function getOneSauce(req, res, next) {
     Sauce.findOne({ _id: req.params.id })
     .then(sauce => res.status(200).json(sauce))
-    .catch(error => res.status(404).json({ error }));
+    .catch(error => res.status(404).end(formatErrorForResponse(error)));
 }
 
 /*
@@ -267,7 +274,7 @@ export function getOneSauce(req, res, next) {
 export function getAllSauces(req, res, next) {
     Sauce.find()
     .then(sauces => res.status(200).json(sauces))
-    .catch(error => res.status(400).json({ error }));
+    .catch(error => res.status(400).end(formatErrorForResponse(error)));
 }
 
 /*
@@ -355,7 +362,7 @@ export function likeSauce(req, res, next) {
         // Update the sauce on the database
         Sauce.updateOne({ _id: req.params.id }, sauce)
         .then(() => res.status(200).json({ message: 'Etat de statut de like de sauce modifié !'}))
-        .catch(error => res.status(400).json({ error }));
+        .catch(error => res.status(400).end(formatErrorForResponse(error)));
     })
-    .catch(error => res.status(404).json({ error }));
+    .catch(error => res.status(404).end(formatErrorForResponse(error)));
 }
