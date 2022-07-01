@@ -37,6 +37,7 @@ yarn-error.log
 /frontend/libpeerconnection.log
 testem.log
 /frontend/typings
+/backend/images
 
 # Environment / Configuration
 /backend/.env
