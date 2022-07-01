@@ -1,6 +1,8 @@
 import Sauce from '../models/sauce.js';
 import fs from 'fs';
 
+const SAUCES_IMAGES_SAVE_PATH = 'images';
+
 /*
  * @oas [post] /api/sauces
  * tags: ["sauces"]
@@ -49,7 +51,7 @@ export function createSauce(req, res, next) {
     const sauceObject = JSON.parse(req.body.sauce);
     const sauce = new Sauce({
         ...sauceObject,
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+        imageUrl: `${req.protocol}://${req.get('host')}/${SAUCES_IMAGES_SAVE_PATH}/${req.file.filename}`,
         likes: 0,
         dislikes: 0,
         usersLiked: [],
@@ -112,13 +114,38 @@ export function createSauce(req, res, next) {
 // IN : EITHER Sauce as JSON OR { sauce: String, image: File }
 // OUT: { message: String }
 export function modifySauce(req, res, next) {
+    // Check if the user has the right to modify the sauce
+    var filename = "";
+    Sauce.findOne({ _id: req.params.id })
+    .then((sauce) => {
+        if (!sauce) {
+            res.status(200).json({ message: 'No such Sauce!'})
+        }
+        else if (sauce.userId !== req.auth.userId) {
+            res.status(200).json({ message: 'Unauthorized request!'})
+        }
+        else {
+            if (req.file) {
+                filename = sauce.imageUrl.split(`/${SAUCES_IMAGES_SAVE_PATH}/`)[1];
+            }
+        }
+    })
+    .catch(error => errorMessage = error.message);
+    // Modify the sauce
     const sauceObject = req.file ?
         {
             ...JSON.parse(req.body.sauce),
-            imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+            imageUrl: `${req.protocol}://${req.get('host')}/${SAUCES_IMAGES_SAVE_PATH}/${req.file.filename}`
         } : { ...req.body };
     Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
-    .then(() => res.status(200).json({ message: 'Objet modifié !'}))
+    .then(() => {
+        if (req.file) {
+            fs.unlink(`${SAUCES_IMAGES_SAVE_PATH}/${filename}`, (error) => {
+                var errorMessage = error ? (" - image non supprimée : " + error.message) : "";
+                res.status(200).json({ message: 'Objet modifié !' + errorMessage})
+            });
+        }
+    })
     .catch(error => res.status(400).json({ error }));
 }
 
@@ -172,8 +199,8 @@ export function deleteSauce(req, res, next) {
             res.status(401).json({ error: 'Unauthorized request!' });
         }
         else {
-            const filename = sauce.imageUrl.split('/images/')[1];
-            fs.unlink(`images/${filename}`, () => {
+            const filename = sauce.imageUrl.split(`/${SAUCES_IMAGES_SAVE_PATH}/`)[1];
+            fs.unlink(`${SAUCES_IMAGES_SAVE_PATH}/${filename}`, () => {
                 Sauce.deleteOne({ _id: req.params.id })
                 .then(() => res.status(200).json({ message: 'Deleted!'}))
                 .catch(error => res.status(401).json({ error }));

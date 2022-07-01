@@ -1,4 +1,5 @@
 import multer from 'multer';
+import fs from 'fs'
 
 const MIME_TYPES = {
     'image/jpg': 'jpg',
@@ -6,9 +7,14 @@ const MIME_TYPES = {
     'image/png': 'png'
 };
 
+const SAUCES_IMAGES_SAVE_PATH = 'images';
+
 const storage = multer.diskStorage({
     destination: (req, file, callback) => {
-        callback(null, 'images');
+        if (! fs.existsSync(SAUCES_IMAGES_SAVE_PATH)) {
+            fs.mkdirSync(SAUCES_IMAGES_SAVE_PATH, { recursive: true })
+        }
+        callback(null, SAUCES_IMAGES_SAVE_PATH);
     },
     filename: (req, file, callback) => {
         const fullName = file.originalname.split(' ').join('_');
