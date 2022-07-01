@@ -5,6 +5,7 @@
     {
       "name": "Backend node server",
       "program": "${workspaceFolder}/backend/server.js",
+      "cwd": "${workspaceRoot}/backend",
       "request": "launch",
       "type": "node"
     },
