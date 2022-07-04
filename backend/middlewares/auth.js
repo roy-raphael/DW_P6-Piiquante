@@ -1,5 +1,5 @@
-import jwt from 'jsonwebtoken';
 import {formatErrorForResponse} from '../utils/error-utils.js'
+import {verify} from '../utils/jwt-utils.js'
 import Sauce from '../models/sauce.js';
 
 export function authorise(req, res, next) {
@@ -9,7 +9,7 @@ export function authorise(req, res, next) {
             throw new Error('No token provided (for authentication)');
         }
         const token = tokenAuth.split(' ')[1];
-        const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
+        const decodedToken = verify(token, req.body.email);
         const userId = decodedToken.userId;
         req.auth = { userId };
         if (req.body.userId && req.body.userId !== userId) {

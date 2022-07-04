@@ -1,6 +1,7 @@
 import User from '../models/user.js';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import {formatErrorForResponse} from '../utils/error-utils.js'
+import {sign} from '../utils/jwt-utils.js'
 
 /*
  * @oas [post] /api/auth/signup
@@ -110,13 +111,10 @@ export function login(req, res, next) {
             if (!valid) {
                 return res.status(401).end(formatErrorForResponse(new Error('Incorrect password')));
             }
+            var token = sign({ userId: user._id }, req.body.email);
             res.status(200).json({
                 userId: user._id,
-                token: jwt.sign(
-                    { userId: user._id },
-                    'RANDOM_TOKEN_SECRET',
-                    { expiresIn: '24h' }
-                )
+                token: token
             });
         })
         .catch(error => res.status(500).end(formatErrorForResponse(error)));
