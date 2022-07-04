@@ -59,7 +59,7 @@ export function createSauce(req, res, next) {
         usersDisliked: []
     });
     sauce.save()
-    .then(() => res.status(201).json({ message: 'Objet enregistré !'}))
+    .then(() => res.status(201).json({ message: 'Sauce created'}))
     .catch(error => res.status(400).end(formatErrorForResponse(error)));
 }
 
@@ -128,7 +128,7 @@ export function modifySauce(req, res, next) {
                 if (error) {
                     console.error(error);
                 }
-                res.status(200).json({ message: 'Objet modifié !'})
+                res.status(200).json({ message: 'Sauce updated'})
             });
         }
     })
@@ -188,7 +188,7 @@ export function deleteSauce(req, res, next) {
             console.error(error);
         }
         Sauce.deleteOne({ _id: req.params.id })
-        .then(() => res.status(200).json({ message: 'Deleted!'}))
+        .then(() => res.status(200).json({ message: 'Sauce deleted'}))
         .catch(error => res.status(401).end(formatErrorForResponse(error)));
     });
 }
@@ -337,7 +337,7 @@ export function likeSauce(req, res, next) {
         }
         // Update the sauce on the database
         Sauce.updateOne({ _id: req.params.id }, sauce)
-        .then(() => res.status(200).json({ message: 'Etat de statut de like de sauce modifié !'}))
+        .then(() => res.status(200).json({ message: 'Sauce like status updated'}))
         .catch(error => res.status(400).end(formatErrorForResponse(error)));
     })
     .catch(error => res.status(404).end(formatErrorForResponse(error)));
