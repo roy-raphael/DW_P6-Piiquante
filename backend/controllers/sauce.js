@@ -64,7 +64,7 @@ export function createSauce(req, res, next) {
 }
 
 /*
- * @oas [post] /api/sauces/{id}
+ * @oas [put] /api/sauces/{id}
  * tags: ["sauces"]
  * summary: Modification of a sauce
  * description: >
@@ -122,14 +122,18 @@ export function modifySauce(req, res, next) {
         } : { ...req.body };
     Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
     .then(() => {
+        var responseStatus = 200;
+        var responseContent = { message: 'Sauce updated'};
         if (req.file) {
             var filename = req.sauce.imageUrl.split(`/${SAUCES_IMAGES_SAVE_PATH}/`)[1];
             fs.unlink(`${SAUCES_IMAGES_SAVE_PATH}/${filename}`, (error) => {
                 if (error) {
                     console.error(error);
                 }
-                res.status(200).json({ message: 'Sauce updated'})
+                res.status(responseStatus).json(responseContent);
             });
+        } else {
+            res.status(responseStatus).json(responseContent);
         }
     })
     .catch(error => res.status(400).end(formatErrorForResponse(error)));
