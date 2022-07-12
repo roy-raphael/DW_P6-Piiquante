@@ -11,6 +11,24 @@ const SAUCES_IMAGES_SAVE_PATH = 'images';
 
 dotenv.config();
 
+// Check the dotenv file
+let dotenvMissingVariables = [];
+if (process.env.DB_PROTOCOL === undefined) dotenvMissingVariables.push("DB_PROTOCOL");
+if (process.env.DB_USERNAME === undefined) dotenvMissingVariables.push("DB_USERNAME");
+if (process.env.DB_PASSWORD === undefined) dotenvMissingVariables.push("DB_PASSWORD");
+if (process.env.DB_HOST === undefined) dotenvMissingVariables.push("DB_HOST");
+if (process.env.DB_NAME === undefined) dotenvMissingVariables.push("DB_NAME");
+if (process.env.RSA_PRIVATE_KEY === undefined) dotenvMissingVariables.push("RSA_PRIVATE_KEY");
+if (process.env.RSA_PUBLIC_KEY === undefined) dotenvMissingVariables.push("RSA_PUBLIC_KEY");
+if (process.env.JWT_ISSUER === undefined) dotenvMissingVariables.push("JWT_ISSUER");
+if (process.env.JWT_AUDIENCE === undefined) dotenvMissingVariables.push("JWT_AUDIENCE");
+if (dotenvMissingVariables.length !== 0) {
+    let errorMessage = "DOTENV file not complete (missing : ";
+    dotenvMissingVariables.forEach(element => errorMessage += element + ", ");
+    console.error(errorMessage.split(', ').slice(0, -1).join(', ') + ")");
+    process.exit(1);
+}
+
 const app = express();
 
 mongoose.connect(`${process.env.DB_PROTOCOL}://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}/?retryWrites=true&w=majority`,
@@ -35,5 +53,11 @@ app.use('/images', express.static(path.join(__dirname, SAUCES_IMAGES_SAVE_PATH))
 
 app.use('/api/auth', userRoutes);
 app.use('/api/sauces', saucesRoutes);
+
+process.on('SIGTERM', () => {
+    server.close(() => {
+        console.log('Process terminated');
+    });
+});
 
 export default app;
