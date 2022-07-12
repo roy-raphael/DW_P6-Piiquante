@@ -1,5 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import helmet from 'helmet';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -18,6 +19,8 @@ mongoose.connect(`${process.env.DB_PROTOCOL}://${process.env.DB_USERNAME}:${proc
 .catch(() => console.log('Connexion à MongoDB échouée !'));
 
 app.use(express.json());
+
+app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
