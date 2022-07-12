@@ -14,7 +14,7 @@ try {
     publicKEY = fs.readFileSync(process.env.RSA_PUBLIC_KEY, 'utf8');
 } catch(error) {
     console.error(error);
-    // TODO : exit the app ?
+    process.kill(process.pid, 'SIGTERM');
 }
 
 export function sign(payload, userEmail) {
