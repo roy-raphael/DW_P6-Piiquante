@@ -20,6 +20,7 @@
     "mongoose-unique-validator": "^3.1.0",
     "multer": "^1.4.5-lts.1",
     "oas": "^18.3.3",
-    "rate-limiter-flexible": "^2.3.7"
+    "rate-limiter-flexible": "^2.3.7",
+    "sharp": "^0.30.7"
   }
 }
