@@ -8,7 +8,7 @@ import {sign} from '../utils/jwt-utils.js'
  * @oas [post] /api/auth/signup
  * tags: ["auth"]
  * summary: Creation of a new user
- * description: Hachage du mot de passe de l'utilisateur, ajout de l'utilisateur à la base de données
+ * description: Hash the user password and add the user to the database
  * requestBody:
  *  required: true
  *  content:
@@ -17,27 +17,25 @@ import {sign} from '../utils/jwt-utils.js'
  *        $ref: "#/components/schemas/user"
  * responses:
  *  "201":
- *    description: "OK"
+ *    description: OK
  *    content:
  *      application/json:
  *        schema:
- *          type: "string"
- *          description: Message de création d'utilisateur
- *        example: Utilisateur créé
+ *          type: string
+ *          description: User creation message
+ *        example: User created
  *  "400":
- *    description: TODO
+ *    description: Bad request
  *    content:
  *      application/json:
  *        schema:
  *          $ref: "#/components/schemas/errorMessage"
- *        example: TODO
  *  "500":
- *    description: TODO
+ *    description: Internal Server Error
  *    content:
  *      application/json:
  *        schema:
  *          $ref: "#/components/schemas/errorMessage"
- *        example: TODO
  */
 // IN : { email: string, password: string }
 // OUT: { message: string }
@@ -60,10 +58,9 @@ export function signup(req, res, next) {
  * tags: ["auth"]
  * summary: Connexion of a user
  * description: >
- *   Vérification des informations d'identification de l'utilisateur, renvoie l _id de
- *   l'utilisateur depuis la base de données et un token web JSON signé
- *   (contenant également l'_id de l'utilisateur).
- *   Une limitation du nombre de tentatives de connexions par utilisateur est mise en place.
+ *  Check of the user identification informations, return the _id of the user from
+ *  the database and a signed JSON web token (containing the _id of the user).
+ *  The number of (failed) attempts to connect for a user is limited (in the time as well).
  * requestBody:
  *  required: true
  *  content:
@@ -72,11 +69,11 @@ export function signup(req, res, next) {
  *        $ref: "#/components/schemas/user"
  * responses:
  *  "200":
- *    description: "OK"
+ *    description: OK
  *    content:
  *      application/json:
  *        schema:
- *          type: "object"
+ *          type: object
  *          properties:
  *            userId:
  *              type: string
@@ -84,28 +81,27 @@ export function signup(req, res, next) {
  *            token:
  *              type: string
  *              description: token web JSON signé (contenant également l'ID de l'utilisateur)
- *        example: TODO
+ *        example:
+ *          userId: e5268c386c9b17c39bd6a17d
+ *          token: ...
  *  "401":
- *    description: TODO
+ *    description: Unauthorized
  *    content:
  *      application/json:
  *        schema:
  *          $ref: "#/components/schemas/errorMessage"
- *        example: TODO
  *  "429":
- *    description: TODO
+ *    description: Too Many Request
  *    content:
  *      application/json:
  *        schema:
  *          $ref: "#/components/schemas/errorMessage"
- *        example: TODO
  *  "500":
- *    description: TODO
+ *    description: Internal Server Error
  *    content:
  *      application/json:
  *        schema:
  *          $ref: "#/components/schemas/errorMessage"
- *        example: TODO
  */
 // IN : { email: string, password: string }
 // OUT: { userId: string, token: string }
@@ -159,34 +155,40 @@ export function login(req, res, next) {
     .catch(error => res.status(500).end(formatErrorForResponse(error)));
 }
 
+// middleware that blocks the connexion attemp if the user has failed too many times
 export async function loginRateLimiter(req, res, next) {
     const resById = await loginLimiter.get(req.body.email);
     let retrySecs = 0;
   
-    if (resById !== null && resById.remainingPoints <= 0) {
-      retrySecs = Math.round(resById.msBeforeNext / 1000) || 1;
+    // Get the remaining seconds before the next authorized connexion try   
+    // (if the user has already too much failed attempts)
+    if (resById !== null && resById.remainingPoints <= 0) { 
+        retrySecs = Math.round(resById.msBeforeNext / 1000) || 1;
     }
-  
+    
     if (retrySecs > 0) {
-      res.set('Retry-After', String(retrySecs));
-      res.status(429).end('Too Many Requests');
+        res.set('Retry-After', String(retrySecs));
+        res.status(429).end('Too Many Requests');
     } else {
         next();
     }
 }
 
+// Main rate limiter : number of authorized tries + blocking system
 const loginLimiter = new rateLimiter.RateLimiterMemory({
     keyPrefix: 'login',
     points: 5, // 5 attempts
     duration: 60, // within 1 minute
 });
 
+// Secondary rate llimiter : tracks the number of consecutive connexion failed attempt
 const loginConsecutiveLimiter = new rateLimiter.RateLimiterMemory({
   keyPrefix: 'login_consecutive_limiter',
   points: 99999, // doesn't matter much, this is just counter
   duration: 0, // never expire
 });
 
+// Returns a number from the Fibonacci suite corresponding to a given number
 function getFibonacciBlockDurationMinutes(countConsecutiveOutOfLimits) {
     if (countConsecutiveOutOfLimits <= 1) {
       return 1;

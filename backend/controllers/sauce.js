@@ -9,18 +9,17 @@ const SAUCES_IMAGES_SAVE_PATH = 'images';
  * tags: ["sauces"]
  * summary: Creation of a new sauce
  * description: >
- *  Capture et enregistre l'image, analyse la sauce transformée en chaîne de caractères et
- *  l'enregistre dans la base de données en définissant correctement son imageUrl. 
- *  Initialise les likes et dislikes de la sauce à 0 et les usersLiked et usersDisliked
- *  avec des tableaux vides. Remarquez que le corps de la demande initiale est vide ; 
- *  lorsque multer est ajouté, il renvoie une chaîne pour le corps de la demande
- *  en fonction des données soumises avec le fichier.
+ *  Capture and save the image, analyze the sauce (transformed into string) and 
+ *  save it in the datbase (with the right imageUrl). Initialize likes and dislikes 
+ *  of the sauce to 0, and usersLiked and usersDisliked with empty arrays.
+ *  The initial request body is empty ; multer returns a string for the request body
+ *  with the data submitted with the file.
  * requestBody:
  *  required: true
  *  content:
  *    multipart/form-data:
  *      schema:
- *        type: "object"
+ *        type: object
  *        properties:
  *          sauce:
  *            $ref: "#/components/schemas/sauce-form"
@@ -28,23 +27,27 @@ const SAUCES_IMAGES_SAVE_PATH = 'images';
  *            type: string
  *            format: binary
  *            description: image to upload
- *      example: TODO
  * responses:
  *  "201":
- *    description: "OK"
+ *    description: OK
  *    content:
  *      application/json:
  *        schema:
- *          type: "string"
- *          description: Message de création d'une sauce
- *        example: Objet enregistré
+ *          type: string
+ *          description: Sauce creation message
+ *        example: Sauce created
  *  "400":
- *    description: TODO
+ *    description: Bad request
  *    content:
  *      application/json:
  *        schema:
  *          $ref: "#/components/schemas/errorMessage"
- *        example: TODO
+ *  "401":
+ *    description: Unauthorized
+ *    content:
+ *      application/json:
+ *        schema:
+ *          $ref: "#/components/schemas/errorMessage"
  */
 // IN : { sauce: String, image: File }
 // OUT: { message: String }
@@ -68,13 +71,12 @@ export function createSauce(req, res, next) {
  * tags: ["sauces"]
  * summary: Modification of a sauce
  * description: >
- *  Met à jour la sauce avec l'_id fourni. Si une image est téléchargée, elle est capturée et
- *  l’imageUrl de la sauce est mise à jour. Si aucun fichier n'est fourni,
- *  les informations sur la sauce se trouvent directement dans le corps de la requête
- *  (req.body.name, req.body.heat, etc.). Si un fichier est fourni, la sauce transformée
- *  en chaîne de caractères se trouve dans req.body.sauce. Notez que le corps de la demande
- *  initiale est vide ; lorsque multer est ajouté, il renvoie une chaîne du corps
- *  de la demande basée sur les données soumises avec le fichier.
+ *  Update the sauce with the _id submitted.
+ *  If an image is uploaded, it is captured, and the imageUrl of the sauce is updated.
+ *  If no file is submitted, the informations of the sauce are in the root of the request body.
+ *  If a file is submitted, the sauce (string) is in req.body.sauce
+ *  The initial raquest body is empty ; multer returns a string for the request body
+ *  with the data submitted with the file.
  * parameters:
  *  - $ref: "#/components/parameters/sauceIdParam"
  * requestBody:
@@ -83,7 +85,13 @@ export function createSauce(req, res, next) {
  *    application/json:
  *      schema:
  *        $ref: "#/components/schemas/sauce-form"
- *      example: TODO
+ *      example:
+ *        name: Oaxacan
+ *        manufacturer: Cajohns Fiery Foods Company
+ *        description: A sauce from Latin America
+ *        mainPepper: Black Pepper
+ *        heat: 4
+ *        userId: e5268c386c9b17c39bd6a17d
  *    multipart/form-data:
  *      schema:
  *        type: "object"
@@ -94,23 +102,39 @@ export function createSauce(req, res, next) {
  *            type: string
  *            format: binary
  *            description: image to upload
- *      example: TODO
  * responses:
  *  "200":
- *    description: "OK"
+ *    description: OK
  *    content:
  *      application/json:
  *        schema:
- *          type: "string"
- *          description: Message de modification d'une sauce
- *        example: Objet modifié
+ *          type: string
+ *          description: Sauce modification message
+ *        example: Sauce updated
  *  "400":
- *    description: TODO
+ *    description: Bad request
  *    content:
  *      application/json:
  *        schema:
  *          $ref: "#/components/schemas/errorMessage"
- *        example: TODO
+ *  "401":
+ *    description: Unauthorized
+ *    content:
+ *      application/json:
+ *        schema:
+ *          $ref: "#/components/schemas/errorMessage"
+ *  "403":
+ *    description: Forbidden
+ *    content:
+ *      application/json:
+ *        schema:
+ *          $ref: "#/components/schemas/errorMessage"
+ *  "404":
+ *    description: Not Found
+ *    content:
+ *      application/json:
+ *        schema:
+ *          $ref: "#/components/schemas/errorMessage"
  */
 // IN : EITHER Sauce as JSON OR { sauce: String, image: File }
 // OUT: { message: String }
@@ -143,46 +167,36 @@ export function modifySauce(req, res, next) {
  * @oas [delete] /api/sauces/{id}
  * tags: ["sauces"]
  * summary: Deletion of a sauce
- * description: Supprime la sauce avec l'_id fourni
+ * description: Delete the sauce with the given _id
  * parameters:
  *  - $ref: "#/components/parameters/sauceIdParam"
  * responses:
  *  "200":
- *    description: "OK"
+ *    description: OK
  *    content:
  *      application/json:
  *        schema:
- *          type: "string"
- *          description: Message de suppression d'une sauce
- *        example: Objet supprimé
+ *          type: string
+ *          description: Sauce deletion message
+ *        example: Sauce deleted
  *  "401":
- *    description: TODO
+ *    description: Unauthorized
  *    content:
  *      application/json:
  *        schema:
  *          $ref: "#/components/schemas/errorMessage"
- *        example: TODO
  *  "403":
- *    description: TODO
+ *    description: Forbidden
  *    content:
  *      application/json:
  *        schema:
  *          $ref: "#/components/schemas/errorMessage"
- *        example: TODO
  *  "404":
- *    description: TODO
+ *    description: Not Found
  *    content:
  *      application/json:
  *        schema:
  *          $ref: "#/components/schemas/errorMessage"
- *        example: TODO
- *  "500":
- *    description: TODO
- *    content:
- *      application/json:
- *        schema:
- *          $ref: "#/components/schemas/errorMessage"
- *        example: TODO
  */
 // OUT: { message: String }
 export function deleteSauce(req, res, next) {
@@ -201,24 +215,28 @@ export function deleteSauce(req, res, next) {
  * @oas [get] /api/sauces/{id}
  * tags: ["sauces"]
  * summary: Find a sauce by ID
- * description: Renvoie la sauce avec l’_id fourni
+ * description: Returns the sauce with the given _id
  * parameters:
  *  - $ref: "#/components/parameters/sauceIdParam"
  * responses:
  *  "200":
- *    description: "OK"
+ *    description: OK
  *    content:
  *      application/json:
  *        schema:
  *          $ref: "#/components/schemas/sauce"
- *        example: TODO
- *  "404":
- *    description: TODO
+ *  "401":
+ *    description: Unauthorized
  *    content:
  *      application/json:
  *        schema:
  *          $ref: "#/components/schemas/errorMessage"
- *        example: TODO
+ *  "404":
+ *    description: Not Found
+ *    content:
+ *      application/json:
+ *        schema:
+ *          $ref: "#/components/schemas/errorMessage"
  */
 // OUT: Single sauce
 export function getOneSauce(req, res, next) {
@@ -231,24 +249,28 @@ export function getOneSauce(req, res, next) {
  * @oas [get] /api/sauces
  * tags: ["sauces"]
  * summary: Find all sauces
- * description: Renvoie un tableau de toutes les sauces de la base de données
+ * description: Returns an array of all the sauces in the database
  * responses:
  *  "200":
- *    description: "OK"
+ *    description: OK
  *    content:
  *      application/json:
  *        schema:
  *          type: array
  *          items:
  *            $ref: "#/components/schemas/sauce"
- *        example: TODO
  *  "400":
- *    description: TODO
+ *    description: Bad request
  *    content:
  *      application/json:
  *        schema:
  *          $ref: "#/components/schemas/errorMessage"
- *        example: TODO
+ *  "401":
+ *    description: Unauthorized
+ *    content:
+ *      application/json:
+ *        schema:
+ *          $ref: "#/components/schemas/errorMessage"
  */
 // OUT: Array of sauces
 export function getAllSauces(req, res, next) {
@@ -262,15 +284,13 @@ export function getAllSauces(req, res, next) {
  * tags: ["sauces"]
  * summary: Sets the like status of a sauce for a user
  * description: >
- *  Définit le statut « Like » pour l' userId fourni.
- *  Si like = 1, l'utilisateur aime (= like) la sauce.
- *  Si like = 0, l'utilisateur annule son like ou son dislike.
- *  Si like = -1, l'utilisateur n'aime pas (= dislike) la sauce.
- *  L'ID de l'utilisateur doit être ajouté ou retiré du tableau approprié.
- *  Cela permet de garder une trace de leurs préférences et les empêche de liker ou
- *  de ne pas disliker la même sauce plusieurs fois :
- *  un utilisateur ne peut avoir qu'une seule valeur pour chaque sauce.
- *  Le nombre total de « Like » et de « Dislike » est mis à jour à chaque nouvelle notation.
+ *  Define the "like" status of a given userId for a sauce
+ *  If like = 1, the user likes the sauce.
+ *  If like = 0, the user cancels its like or dislike (neutral).
+ *  If like = -1, the user dislikes the sauce.
+ *  The ID of the user is added (or removed) to the right array.
+ *  A user can only have one (and only one) value for each sauce.
+ *  The total number of likes and dislikes is updated after each new rating.
  * parameters:
  *  - $ref: "#/components/parameters/sauceIdParam"
  * requestBody:
@@ -282,37 +302,43 @@ export function getAllSauces(req, res, next) {
  *        properties:
  *          userId:
  *            type: string
- *            description: TODO
+ *            description: ID of the user
  *          like:
  *            type: number
- *            description: TODO
+ *            description: new like status of the sauce for the user (-1 dislike / 0 neutral / 1 like)
  *            minimum: -1
  *            maximum: 1
  *            enum: [-1, 0, 1]
- *      example: TODO
+ *      example:
+ *        userId: e5268c386c9b17c39bd6a17d
+ *        like: 1
  * responses:
  *  "200":
- *    description: "OK"
+ *    description: OK
  *    content:
  *      application/json:
  *        schema:
- *          type: "string"
- *          description: Message de définition du statut like d'une sauce
- *        example: Etat de statut de like de sauce modifié !
+ *          type: string
+ *          description: Sauce like status update message
+ *        example: Sauce like status updated
  *  "400":
- *    description: TODO
+ *    description: Bad request
  *    content:
  *      application/json:
  *        schema:
  *          $ref: "#/components/schemas/errorMessage"
- *        example: TODO
+ *  "401":
+ *    description: Unauthorized
+ *    content:
+ *      application/json:
+ *        schema:
+ *          $ref: "#/components/schemas/errorMessage"
  *  "404":
- *    description: TODO
+ *    description: Not Found
  *    content:
  *      application/json:
  *        schema:
  *          $ref: "#/components/schemas/errorMessage"
- *        example: TODO
  */
 // IN : { userId: String, like: Number }
 // OUT: { message: String }

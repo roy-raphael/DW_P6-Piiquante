@@ -45,7 +45,7 @@
         "required": true,
         "schema": {
           "type": "string",
-          "description": "ID de la sauce"
+          "description": "ID of the sauce"
         }
       }
     },
@@ -53,111 +53,143 @@
       "errorMessage": {
         "type": "string",
         "maxLength": 256,
-        "description": "A text message describing an error"
+        "description": "A text message describing an error",
+        "example": "Error during the request processing"
       },
       "user": {
         "type": "object",
+        "description": "data relative to a user (object structure -> user schema)",
         "properties": {
           "email": {
             "type": "string",
-            "description": "adresse e-mail de l'utilisateur [unique]"
+            "description": "e-mail adress of the user [unique]"
           },
           "password": {
             "type": "string",
-            "description": "mot de passe de l'utilisateur haché"
+            "description": "hashed user password"
           }
         }
       },
       "sauce": {
         "type": "object",
-        "description": "TODO",
+        "description": "data relative to a sauce (object structure -> sauce schema)",
         "properties": {
           "_id": {
             "type": "string",
-            "description": "TODO"
+            "description": "ID of the sauce"
           },
           "userId": {
             "type": "string",
-            "description": "TODO"
+            "description": "ID of the user"
           },
           "name": {
             "type": "string",
-            "description": "TODO"
+            "description": "Name of the sauce"
           },
           "manufacturer": {
             "type": "string",
-            "description": "TODO"
+            "description": "Manufacturer of the sauce"
           },
           "description": {
             "type": "string",
-            "description": "TODO"
+            "description": "Description of the sauce"
           },
           "mainPepper": {
             "type": "string",
-            "description": "TODO"
+            "description": "Main pepper of the sauce"
           },
           "imageUrl": {
             "type": "string",
-            "description": "TODO"
+            "description": "image URL of the sauce"
           },
           "heat": {
             "type": "number",
-            "description": "TODO"
+            "description": "Heat number of the sauce",
+            "minimum": 1,
+            "maximum": 10
           },
           "likes": {
             "type": "number",
-            "description": "TODO"
+            "description": "Number of likes of the sauce",
+            "minimum": 0
           },
           "dislikes": {
             "type": "number",
-            "description": "TODO"
+            "description": "Number of dislikes of the sauce",
+            "minimum": 0
           },
           "usersLiked": {
             "type": "array",
-            "description": "TODO",
+            "description": "Array of users (user IDs) that likes the sauce",
             "items": {
               "type": "string",
-              "description": "TODO"
-            }
+              "description": "ID of a user that likes the sauce"
+            },
+            "minItems": 0
           },
           "usersDisliked": {
             "type": "array",
-            "description": "TODO",
+            "description": "Array of users (user IDs) that dislikes the sauce",
             "items": {
               "type": "string",
-              "description": "TODO"
-            }
+              "description": "ID of a user that likes the sauce"
+            },
+            "minItems": 0
           }
+        },
+        "example": {
+          "_id":"b3c839e5176868cb62bdc179",
+          "userId":"e5268c386c9b17c39bd6a17d",
+          "name":"Oaxacan",
+          "manufacturer":"Cajohns Fiery Foods Company",
+          "description":"A sauce from Latin America",
+          "mainPepper":"Black Pepper",
+          "imageUrl":"http://localhost:3000/images/Sauce1_image_20220701_162713.jpg",
+          "heat":4,
+          "likes":2,
+          "dislikes":2,
+          "usersLiked":["173868cb179662bdc9e9e5c0","e5268c386c9b17c39bd6a17d"],
+          "usersDisliked":["6173868cb1792bdc9e0e56ba","5173868cb17962bdc9d7e6b4"]
         }
       },
       "sauce-form": {
         "type": "object",
-        "description": "data tu use to create the sauce (object structure -> sauce-form schema)",
+        "description": "data to use to create the sauce (object structure -> sauce-form schema)",
         "properties": {
           "name": {
             "type": "string",
-            "description": "TODO"
+            "description": "Name of the sauce"
           },
           "manufacturer": {
             "type": "string",
-            "description": "TODO"
+            "description": "Manufacturer of the sauce"
           },
           "description": {
             "type": "string",
-            "description": "TODO"
+            "description": "Description of the sauce"
           },
           "mainPepper": {
             "type": "string",
-            "description": "TODO"
+            "description": "Main pepper of the sauce"
           },
           "heat": {
             "type": "number",
-            "description": "TODO"
+            "description": "Heat number of the sauce",
+            "minimum": 1,
+            "maximum": 10
           },
           "userId": {
             "type": "string",
-            "description": "TODO"
+            "description": "ID of the user"
           }
+        },
+        "example": {
+          "name":"Oaxacan",
+          "manufacturer":"Cajohns Fiery Foods Company",
+          "description":"A sauce from Latin America",
+          "mainPepper":"Black Pepper",
+          "heat":4,
+          "userId":"e5268c386c9b17c39bd6a17d"
         }
       }
     }
