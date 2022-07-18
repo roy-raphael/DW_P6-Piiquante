@@ -38,6 +38,7 @@ mongoose.connect(`${process.env.DB_PROTOCOL}://${process.env.DB_USERNAME}:${proc
 
 app.use(express.json());
 
+app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 
 app.use((req, res, next) => {
