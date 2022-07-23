@@ -37,6 +37,9 @@ you can instead run `nodemon server` (after having installing nodemon : `npm ins
 
 ### Generate OpenAPI documentation
 Run `npm run doc` (in the backend folder)
+
+### View OpenAPI documentation
+The OpenAPI documentation is here : backend/hot-takes-openapi-doc.json
 To visualize the OpenAPI documentation, you can use a VSCode pluggin (Swagger Viewer for example),
 or paste the content of hot-takes-openapi-doc.json in the editor on the following website : https://editor.swagger.io/
 
