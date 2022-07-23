@@ -5,6 +5,11 @@ const SAUCES_IMAGES_SAVE_PATH = 'images';
 const SAUCES_IMAGES_MAX_LENGTH = 500;
 
 async function resizeImage(req, res, next) {
+    if (! req.file) {
+        next();
+        return;
+    }
+    
     const tmpFileRelativePath = `${SAUCES_IMAGES_SAVE_PATH}/resized-${req.file.filename}`;
     const fileRelativePath = `${SAUCES_IMAGES_SAVE_PATH}/${req.file.filename}`;
 
