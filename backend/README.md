@@ -2,7 +2,16 @@
 
 This is the part of code done for the 6th project of the Openclassrooms Web Developper Course : Hot takes API for the Piiquante enterprise
 
-## Additionnal files required
+## Prerequisites
+
+### Database
+A database where the backend can connect to (for example a MongoDB Atlas free database), with a user configuration to use in the backend.
+You should have the following informations from the database for a use in the backend :
+* protocol of the database
+* name of the host to connect to
+* name of the database to connect to
+* username to use
+* password to use
 
 ### RSA keys
 A public and a private RSA key files (any location) are needed for the backend to run
