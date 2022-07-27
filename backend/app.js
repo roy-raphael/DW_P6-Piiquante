@@ -1,33 +1,13 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import helmet from 'helmet';
-import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import process from './utils/load-env.js';
 import userRoutes from './routes/user.js';
 import saucesRoutes from './routes/sauce.js';
 
 const SAUCES_IMAGES_SAVE_PATH = 'images';
-
-dotenv.config();
-
-// Check the dotenv file
-let dotenvMissingVariables = [];
-if (process.env.DB_PROTOCOL === undefined) dotenvMissingVariables.push("DB_PROTOCOL");
-if (process.env.DB_USERNAME === undefined) dotenvMissingVariables.push("DB_USERNAME");
-if (process.env.DB_PASSWORD === undefined) dotenvMissingVariables.push("DB_PASSWORD");
-if (process.env.DB_HOST === undefined) dotenvMissingVariables.push("DB_HOST");
-if (process.env.DB_NAME === undefined) dotenvMissingVariables.push("DB_NAME");
-if (process.env.RSA_PRIVATE_KEY === undefined) dotenvMissingVariables.push("RSA_PRIVATE_KEY");
-if (process.env.RSA_PUBLIC_KEY === undefined) dotenvMissingVariables.push("RSA_PUBLIC_KEY");
-if (process.env.JWT_ISSUER === undefined) dotenvMissingVariables.push("JWT_ISSUER");
-if (process.env.JWT_AUDIENCE === undefined) dotenvMissingVariables.push("JWT_AUDIENCE");
-if (dotenvMissingVariables.length !== 0) {
-    let errorMessage = "DOTENV file not complete (missing : ";
-    dotenvMissingVariables.forEach(element => errorMessage += element + ", ");
-    console.error(errorMessage.split(', ').slice(0, -1).join(', ') + ")");
-    process.exit(1);
-}
 
 const app = express();
 

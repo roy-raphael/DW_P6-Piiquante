@@ -1,8 +1,7 @@
 import fs from 'fs';
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
+import process from './load-env.js';
 
-dotenv.config();
 const jwtIssuer = process.env.JWT_ISSUER;
 const jwtAudience = process.env.JWT_AUDIENCE;
 var privateKEY = '';
