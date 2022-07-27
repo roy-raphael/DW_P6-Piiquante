@@ -17,13 +17,16 @@ const storage = multer.diskStorage({
         callback(null, SAUCES_IMAGES_SAVE_PATH);
     },
     filename: (req, file, callback) => {
-        const fullName = file.originalname.split(' ').join('_');
-        const name = fullName.split('.').slice(0, -1).join('.');
+        const fullName = file.originalname.replace(' ', '_');
+        const name = fullName.split('.').slice(0, -1).join('.'); // file name without extension
+        // const safeReg = /[^\w!#$%&'+\-=^`{}~@.[\]]/g; // keep only letters, digits, and !#$%&'+-=^_`{}~@.[]
+        const verySafeReg = /[^\w]/g; // keep only letters, digits, and _
+        const nameSafe = name.replace(verySafeReg, '');
         const extension = MIME_TYPES[file.mimetype];
         // Get current date at the format : YYYYMMdd_hhmmss (toISOString gives YYYY-MM-ddThh:mm:ss.zzzZ)
         const dateReg = /[-:]/g;
         var date = new Date(Date.now()).toISOString().replace(dateReg, '').replace('T', '_').split('.').slice(0, -1).join();
-        callback(null, name + '_' + date + '.' + extension);
+        callback(null, nameSafe + '_' + date + '.' + extension);
     }
 });
 
