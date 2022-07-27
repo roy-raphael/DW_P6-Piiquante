@@ -6,8 +6,7 @@ const SAUCES_IMAGES_MAX_LENGTH = 500;
 
 async function resizeImage(req, res, next) {
     if (! req.file) {
-        next();
-        return;
+        return next();
     }
     
     const tmpFileRelativePath = `${SAUCES_IMAGES_SAVE_PATH}/resized-${req.file.filename}`;
@@ -60,7 +59,7 @@ async function resizeImage(req, res, next) {
                             console.error(error);
                             throw error;
                         }
-                        next();
+                        return next();
                     });
                 }
             });
@@ -76,7 +75,7 @@ async function resizeImage(req, res, next) {
         }
     } else {
         // No need to resize the image
-        next();
+        return next();
     }
 }
 

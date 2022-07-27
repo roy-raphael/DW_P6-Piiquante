@@ -16,14 +16,12 @@ passwordSchema
 
 function validatePassword(req, res, next) {
     if (! req.body.password) {
-        next();
-        return;
+        return next();
     }
 
     let passwordValidatorErrorsList = passwordSchema.validate(req.body.password, { details: true });
     if (passwordValidatorErrorsList.length === 0) {
-        next();
-        return;
+        return next();
     } else {
         let errorMessage = "Password too weak.";
         passwordValidatorErrorsList.forEach(element => errorMessage += "\n" + element.message);
